@@ -15,14 +15,21 @@ module Enumerable
   end
 
   def my_select
-    retorno = []
+    retorno = []  
     my_each { |el| retorno << el if yield(el) }
-    false
+    return retorno 
   end
 
   def my_all?
-    my_each { |el| return true if yield(el) }
-    false
+    if block_given?
+      my_each{|el| return false unless yield el}
+    else
+      for el in self
+        return false unless yield el
+      end
+    end
+    true
+ 
   end
 
   def my_any?
@@ -47,7 +54,44 @@ module Enumerable
       length
     end
   end
+
+  def my_map
+    retorno = []
+    procing = proc {
+      my_each { |el|retorno.push(yield el) }
+    }
+    if block_given? 
+      procing.call
+    end 
+    return retorno
+  end
+
+  def my_inject
+    retorno = []
+
+    # acumulador 
+    # e devo adicionar as coisas ao acumulador
+    procing = proc {
+      my_each { |el, adder|        
+        if adder.nil? == true
+          adder = el.self
+        else
+          puts adder
+          puts el
+          retorno.push (yield el, adder)
+        end
+        }
+    }
+    if block_given?
+      procing.call
+    end 
+    puts retorno
+  end
+
+
 end
+
+
 
 
 #tes
