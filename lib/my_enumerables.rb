@@ -66,27 +66,30 @@ module Enumerable
     return retorno
   end
 
-  def my_inject
-    retorno = []
+  def my_inject (value=0, &block)
+    accumulator = value
+     for  i  in self do
+      my_each {|ele|
+        puts "acc is #{accumulator}"
+        puts "ele is #{ele}"
+  
+        puts accumulator + ele
 
-    # acumulador 
-    # e devo adicionar as coisas ao acumulador
-    procing = proc {
-      my_each { |el, adder|        
-        if adder.nil? == true
-          adder = el.self
-        else
-          puts adder
-          puts el
-          retorno.push (yield el, adder)
-        end
-        }
-    }
-    if block_given?
-      procing.call
-    end 
-    puts retorno
+     
+        accumulator = block.call(accumulator, ele)}
+      return accumulator
+  
+  
+      
+     end
+     return accumulator
+   
   end
+
+    ## inject will pass each element and accumulate it
+
+
+
 
 
 end
@@ -103,3 +106,5 @@ class Array
   include Enumerable
   # Define my_each here
 end
+puts [1,2,3].my_map
+puts [1,2,3].my_inject(2) {|sum, number| sum + number}
